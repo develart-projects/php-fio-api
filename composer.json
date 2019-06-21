@@ -1,7 +1,7 @@
 {
   "name": "perlur/php-fio-api",
   "type": "library",
-  "description": "PHP Fio API implemention",
+  "description": "PHP Fio API implemention - DevelArt fork",
   "keywords": [
     "fio",
     "banking",
