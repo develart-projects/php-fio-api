@@ -39,6 +39,16 @@ class ImportResponse
     {
         return (string) $this->xml->result->status;
     }
+    
+    /**
+     * Get error message.
+     *
+     * @return string
+     */
+    public function getErrorMessage()
+    {
+        return (string) $this->xml->result->message;
+    }
 
     /**
      * Get debit sum of the batch for particular currency.
