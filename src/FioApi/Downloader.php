@@ -48,4 +48,51 @@ class Downloader extends AbstractClient
     {
         return $this->downloadFromTo($since, new \DateTime());
     }
+
+    public function setLastId($id)
+    {
+        $client = $this->getClient();
+        $url = $this->urlBuilder->buildSetLastIdUrl($id);
+
+        try {
+            $client->request('get', $url, ['verify' => $this->getCertificatePath()]);
+        } catch (\GuzzleHttp\Exception\BadResponseException $e) {
+            $this->handleException($e);
+        }
+    }
+
+    public function downloadLast()
+    {
+        $url = $this->urlBuilder->buildLastUrl();
+        return $this->downloadTransactionsList($url);
+    }
+
+    private function downloadTransactionsList($url)
+    {
+        $client = $this->getClient();
+
+        try {
+            /** @var ResponseInterface $response */
+            $response = $client->request('get', $url, ['verify' => $this->getCertificatePath()]);
+        } catch (\GuzzleHttp\Exception\BadResponseException $e) {
+            $this->handleException($e);
+        }
+
+        return TransactionList::create(json_decode($response->getBody()->getContents())->accountStatement);
+    }
+
+    private function handleException(\GuzzleHttp\Exception\BadResponseException $e)
+    {
+        if ($e->getCode() == 409) {
+            throw new TooGreedyException('You can use one token for API call every 30 seconds', $e->getCode(), $e);
+        }
+        if ($e->getCode() == 500) {
+            throw new InternalErrorException(
+                'Server returned 500 Internal Error (probably invalid token?)',
+                $e->getCode(),
+                $e
+            );
+        }
+        throw $e;
+    }
 }

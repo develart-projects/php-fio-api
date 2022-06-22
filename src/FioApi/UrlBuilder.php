@@ -57,4 +57,21 @@ class UrlBuilder
             $to->format('Y-m-d')
         );
     }
+
+    public function buildLastUrl()
+    {
+        return sprintf(
+            self::BASE_URL . 'last/%s/transactions.json',
+            $this->getToken()
+        );
+    }
+
+    public function buildSetLastIdUrl($id)
+    {
+        return sprintf(
+            self::BASE_URL . 'set-last-id/%s/%s/',
+            $this->getToken(),
+            $id
+        );
+    }
 }
