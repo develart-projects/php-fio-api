@@ -73,4 +73,13 @@ class ImportResponse
     {
         return (float) $this->xml->result->sums->xpath("sum[@id = '{$currency}']")[0]->sumCredit;
     }
+
+    /**
+     * Get raw response
+     * @return \SimpleXMLElement
+     */
+    public function getRawResponse()
+    {
+        return $this->xml;
+    }
 }
